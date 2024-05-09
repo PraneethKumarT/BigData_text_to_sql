@@ -1,53 +1,9 @@
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
-import axios from 'axios';
-import './App.css';
-import downArrow from './downarrow.PNG';
-import nyulogo from './nyu_short_color.png'
-
-
 
 const App = () => {
   const [file, setFile] = useState(null);
   const [sheets, setSheets] = useState([]);
-
-  const [question, setQuestion] = useState('');  // State to store the user's question
-  const [answer, setAnswer] = useState('');
-  const [isLoading, setIsLoading] = useState(false); // New loading state
-
-
-
-  const getSQL = () => {
-    let script = '';
-    console.log("started request")
-    setIsLoading(true); // Start loading
-
-    sheets?.forEach((sheet) => {
-      script += sheet.sqlSchema;
-      script += ';\n\n';
-    });
-
-    sheets?.forEach((sheet) => {
-      script += sheet.insertStatements;
-      script += ';\n\n';
-    });
-
-    // Now make the HTTP request with the generated SQL script in the body
-    axios.post('https://us-central1-llmsql.cloudfunctions.net/helloWorld', {
-      schema: script,
-      user_in_put: question
-    })
-      .then(response => {
-        setAnswer(response.data)
-        console.log('Success:', response.data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      })
-      .finally(() => setIsLoading(false)); // End loading regardless of the result
-
-  }
-
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -118,48 +74,11 @@ const App = () => {
       `INSERT INTO \`${sheet.name}\` (${columnNames}) VALUES\n    ${values};`;
   };
 
-  console.log()
-
   return (
     <div>
-
-      <header>
-        <img src={nyulogo} alt="Down Arrow" height="60" />
-        <h1>Text to SQL using LLM</h1>
-
-
-      </header>
-
       <h2>Upload and Process Excel File</h2>
-
-
-
-      <div className="file-upload">
-        <div>
-          <input type="file" id="file" accept=".xlsx, .xls" onChange={handleFileChange} style={{ display: 'none' }} />
-          <label htmlFor="file" className="file-upload-btn">Choose File</label>
-        </div>
-        <div>
-
-          <button onClick={handleUpload}>Upload and Load Sheets</button>
-        </div>
-
-      </div>
-
-
-
-      <h4>Question: {question}</h4>
-
-      <div>
-        <label htmlFor="question">Enter your SQL question:</label>
-        <input
-          id="question"
-          type="text"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          placeholder="Type your question here..."
-        />
-      </div>
+      <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
+      <button onClick={handleUpload}>Upload and Load Sheets</button>
 
       {sheets.map((sheet, sheetIndex) => (
         <div key={sheetIndex}>
@@ -216,70 +135,8 @@ const App = () => {
           ) : (
             <p>No data found in this sheet.</p>
           )}
-
-
         </div>
       ))}
-
-      <button onClick={() => getSQL()}>Get SQL</button>
-      <br />
-      <br />
-
-      <div className="answer-box">
-        {isLoading ? <div className="loader"></div> : <p>{answer?.sqlGeneration?.message}</p>}
-      </div>
-
-      <div className="flowchart-container">
-        <div className="flowchart-item">
-          <div className="flowchart-title">1. Information Determination</div>
-          <div className="flowchart-title">
-
-            {answer && answer.informationDetermination_output && answer?.informationDetermination_output.split('\n').map((line, index) => (
-              <React.Fragment key={index}>
-                {line}
-                {index !== answer.informationDetermination_output.split('\n').length - 1 && <br />}
-              </React.Fragment>
-            ))}
-          </div>
-
-        </div>
-
-        <div className="flowchart-arrow">
-          <img src={downArrow} alt="Down Arrow" height="60" />
-
-        </div>
-
-
-        <div className="flowchart-item">
-          <div className="flowchart-title">2. Classification & Hint</div>
-          <div className="flowchart-title">{answer.classificationAndHint_output}</div>
-
-        </div>
-
-        <div className="flowchart-arrow">
-          <img src={downArrow} alt="Down Arrow" height="60" />
-
-        </div>
-
-        <div className="flowchart-item">
-          <div className="flowchart-title">3. SQL Generation</div>
-
-          <div className="flowchart-title">
-
-            {answer && answer?.sqlGeneration_output?.prompt && answer?.sqlGeneration_output?.prompt.split('\n').map((line, index) => (
-              <React.Fragment key={index}>
-                {line}
-                {index !== answer?.sqlGeneration_output?.prompt.split('\n').length - 1 && <br />}
-              </React.Fragment>
-            ))}
-          </div>
-
-          <div className="flowchart-title">{answer?.sqlGeneration_output?.sql}</div>
-
-        </div>
-
-      </div>
-
     </div>
   );
 };
