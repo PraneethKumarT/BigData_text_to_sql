@@ -1,0 +1,633 @@
+eval_err_num:1
+medium pred: SELECT h.born_state, h.age FROM head h JOIN management m ON h.head_ID = m.head_ID ORDER BY h.age;
+medium gold: SELECT name ,  born_state ,  age FROM head ORDER BY age
+
+medium pred: SELECT Name, Budget_in_Billions FROM department;
+medium gold: SELECT creation ,  name ,  budget_in_billions FROM department
+
+eval_err_num:2
+medium pred: SELECT MAX(Budget_in_Billions) AS MaximumBudget, MIN(Budget_in_Billions) AS MinimumBudget FROM department;
+medium gold: SELECT max(budget_in_billions) ,  min(budget_in_billions) FROM department
+
+eval_err_num:3
+easy pred: SELECT AVG(Num_Employees) as AverageEmployees FROM department WHERE Ranking BETWEEN 10 AND 15;
+easy gold: SELECT avg(num_employees) FROM department WHERE ranking BETWEEN 10 AND 15
+
+eval_err_num:4
+hard pred: SELECT DISTINCT d.Creation FROM department d JOIN management m ON d.Department_ID = m.department_ID JOIN head h ON m.head_ID = h.head_ID WHERE h.born_state = 'Alabama';
+hard gold: SELECT DISTINCT T1.creation FROM department AS T1 JOIN management AS T2 ON T1.department_id  =  T2.department_id JOIN head AS T3 ON T2.head_id  =  T3.head_id WHERE T3.born_state  =  'Alabama'
+
+eval_err_num:5
+easy pred: SELECT \"born_state\" FROM \"head\" GROUP BY \"born_state\" HAVING COUNT(\"head_ID\") >= 3;
+easy gold: SELECT born_state FROM head GROUP BY born_state HAVING count(*)  >=  3
+
+eval_err_num:6
+hard pred: SELECT Creation, COUNT(Department_ID) AS NumberOfDepartments FROM department GROUP BY Creation ORDER BY NumberOfDepartments DESC LIMIT 1;
+hard gold: SELECT creation FROM department GROUP BY creation ORDER BY count(*) DESC LIMIT 1
+
+eval_err_num:7
+medium pred: SELECT d.Name, d.Num_Employees FROM department d JOIN management m ON d.Department_ID = m.Department_ID WHERE m.temporary_acting = 'Yes';
+medium gold: SELECT T1.name ,  T1.num_employees FROM department AS T1 JOIN management AS T2 ON T1.department_id  =  T2.department_id WHERE T2.temporary_acting  =  'Yes'
+
+easy pred: SELECT COUNT(*) FROM management;
+easy gold: SELECT count(DISTINCT temporary_acting) FROM management
+
+eval_err_num:8
+extra pred: SELECT COUNT(*) AS DepartmentsWithNoHead FROM department WHERE Department_ID NOT IN (SELECT Department_ID FROM management WHERE head_ID IS NOT NULL);
+extra gold: SELECT count(*) FROM department WHERE department_id NOT IN (SELECT department_id FROM management);
+
+eval_err_num:9
+medium pred: SELECT DISTINCT h.age FROM head h JOIN management m ON h.head_ID = m.head_ID WHERE m.temporary_acting = 'Yes';
+medium gold: SELECT DISTINCT T1.age FROM management AS T2 JOIN head AS T1 ON T1.head_id  =  T2.head_id WHERE T2.temporary_acting  =  'Yes'
+
+eval_err_num:10
+extra pred: SELECT h.born_state FROM head h JOIN management m ON h.head_ID = m.head_ID JOIN department d ON m.department_ID = d.Department_ID WHERE d.Name = 'Treasury' AND h.born_state IN (SELECT h2.born_state FROM head h2 JOIN management m2 ON h2.head_ID = m2.head_ID JOIN department d2 ON m2.department_ID = d2.Department_ID WHERE d2.Name = 'Homeland Security').
+extra gold: SELECT T3.born_state FROM department AS T1 JOIN management AS T2 ON T1.department_id  =  T2.department_id JOIN head AS T3 ON T2.head_id  =  T3.head_id WHERE T1.name  =  'Treasury' INTERSECT SELECT T3.born_state FROM department AS T1 JOIN management AS T2 ON T1.department_id  =  T2.department_id JOIN head AS T3 ON T2.head_id  =  T3.head_id WHERE T1.name  =  'Homeland Security'
+
+eval_err_num:11
+medium pred: SELECT h.name, COUNT(h.head_ID) as NumOfHeads FROM head h JOIN management m ON h.head_ID = m.head_ID GROUP BY h.name;
+medium gold: SELECT T1.department_id ,  T1.name ,  count(*) FROM management AS T2 JOIN department AS T1 ON T1.department_id  =  T2.department_id GROUP BY T1.department_id HAVING count(*)  >  1
+
+eval_err_num:12
+easy pred: SELECT COUNT(*) FROM \"farm\";
+easy gold: SELECT count(*) FROM farm
+
+easy pred: SELECT COUNT(Farm_ID) FROM farm;
+easy gold: SELECT count(*) FROM farm
+
+eval_err_num:13
+easy pred: SELECT \"Total_Horses\" FROM \"farm\" ORDER BY \"Total_Horses\" ASC;
+easy gold: SELECT Total_Horses FROM farm ORDER BY Total_Horses ASC
+
+eval_err_num:14
+easy pred: SELECT c.Official_Name FROM city c JOIN farm_competition f ON c.City_ID = f.Host_city_ID ORDER BY c.Official_Name ASC;
+easy gold: SELECT Total_Horses FROM farm ORDER BY Total_Horses ASC
+
+eval_err_num:15
+easy pred: SELECT Hosts FROM farm_competition WHERE Theme <> 'Aliens';
+easy gold: SELECT Hosts FROM farm_competition WHERE Theme !=  'Aliens'
+
+eval_err_num:16
+easy pred: SELECT fc.Year, cr.Farm_ID, cr.Rank FROM farm_competition fc JOIN competition_record cr ON fc.Competition_ID = cr.Competition_ID ORDER BY fc.Year ASC;
+easy gold: SELECT Theme FROM farm_competition ORDER BY YEAR ASC
+
+eval_err_num:17
+easy pred: SELECT AVG(\"Working_Horses\") FROM \"farm\" WHERE \"Total_Horses\" > 5000;
+easy gold: SELECT avg(Working_Horses) FROM farm WHERE Total_Horses  >  5000
+
+eval_err_num:18
+easy pred: SELECT AVG(\"Working_Horses\") FROM \"farm\" WHERE \"Total_Horses\" > 5000;
+easy gold: SELECT avg(Working_Horses) FROM farm WHERE Total_Horses  >  5000
+
+eval_err_num:19
+medium pred: SELECT MAX(Cows) as MaximumCows, MIN(Cows) as MinimumCows FROM farm;
+medium gold: SELECT max(Cows) ,  min(Cows) FROM farm
+
+eval_err_num:20
+medium pred: SELECT MAX(Cows) AS MaximumCows, MIN(Cows) AS MinimumCows FROM farm;
+medium gold: SELECT max(Cows) ,  min(Cows) FROM farm
+
+easy pred: SELECT Status, COUNT(*) FROM city GROUP BY Status;
+easy gold: SELECT count(DISTINCT Status) FROM city
+
+eval_err_num:21
+easy pred: SELECT \"Official_Name\" FROM \"city\" ORDER BY \"Population\" DESC;
+easy gold: SELECT Official_Name FROM city ORDER BY Population DESC
+
+easy pred: SELECT * FROM city ORDER BY Population DESC;
+easy gold: SELECT Official_Name FROM city ORDER BY Population DESC
+
+eval_err_num:22
+medium pred: SELECT \"Official_Name\", \"Status\" FROM \"city\" ORDER BY \"Population\" DESC LIMIT 1;
+medium gold: SELECT Official_Name ,  Status FROM city ORDER BY Population DESC LIMIT 1
+
+eval_err_num:23
+medium pred: SELECT \"Official_Name\", \"Status\" FROM \"city\" ORDER BY \"Population\" DESC LIMIT 1;
+medium gold: SELECT Official_Name ,  Status FROM city ORDER BY Population DESC LIMIT 1
+
+eval_err_num:24
+medium pred: SELECT fc.Year, c.Official_Name FROM farm_competition fc JOIN city c ON fc.Host_city_ID = c.City_ID;
+medium gold: SELECT T2.Year ,  T1.Official_Name FROM city AS T1 JOIN farm_competition AS T2 ON T1.City_ID  =  T2.Host_city_ID
+
+eval_err_num:25
+medium pred: SELECT fc.Year, c.Official_Name FROM farm_competition fc JOIN city c ON fc.Host_city_ID = c.City_ID;
+medium gold: SELECT T2.Year ,  T1.Official_Name FROM city AS T1 JOIN farm_competition AS T2 ON T1.City_ID  =  T2.Host_city_ID
+
+eval_err_num:26
+medium pred: SELECT c.Official_Name FROM city c JOIN farm_competition fc ON c.City_ID = fc.Host_city_ID GROUP BY c.City_ID, c.Official_Name HAVING COUNT(fc.Competition_ID) > 1;
+medium gold: SELECT T1.Official_Name FROM city AS T1 JOIN farm_competition AS T2 ON T1.City_ID  =  T2.Host_city_ID GROUP BY T2.Host_city_ID HAVING COUNT(*)  >  1
+
+eval_err_num:27
+medium pred: SELECT c.Official_Name FROM city c JOIN farm_competition fc ON c.City_ID = fc.Host_city_ID GROUP BY c.City_ID, c.Official_Name HAVING COUNT(fc.Competition_ID) > 1;
+medium gold: SELECT T1.Official_Name FROM city AS T1 JOIN farm_competition AS T2 ON T1.City_ID  =  T2.Host_city_ID GROUP BY T2.Host_city_ID HAVING COUNT(*)  >  1
+
+eval_err_num:28
+extra pred: SELECT c.Status FROM city c JOIN farm_competition f ON c.City_ID = f.Host_city_ID GROUP BY c.City_ID, c.Status ORDER BY COUNT(f.Competition_ID) DESC LIMIT 1;
+extra gold: SELECT T1.Status FROM city AS T1 JOIN farm_competition AS T2 ON T1.City_ID  =  T2.Host_city_ID GROUP BY T2.Host_city_ID ORDER BY COUNT(*) DESC LIMIT 1
+
+eval_err_num:29
+extra pred: SELECT c.Status FROM city c JOIN (SELECT Host_city_ID, COUNT(*) as CompetitionCount FROM farm_competition GROUP BY Host_city_ID ORDER BY CompetitionCount DESC LIMIT 1) fc ON c.City_ID = fc.Host_city_ID;
+extra gold: SELECT T1.Status FROM city AS T1 JOIN farm_competition AS T2 ON T1.City_ID  =  T2.Host_city_ID GROUP BY T2.Host_city_ID ORDER BY COUNT(*) DESC LIMIT 1
+
+eval_err_num:30
+medium pred: SELECT fc.Theme FROM farm_competition fc JOIN city c ON fc.Host_city_ID = c.City_ID WHERE c.Population > 1000;
+medium gold: SELECT T2.Theme FROM city AS T1 JOIN farm_competition AS T2 ON T1.City_ID  =  T2.Host_city_ID WHERE T1.Population  >  1000
+
+eval_err_num:31
+medium pred: SELECT fc.Theme FROM farm_competition fc JOIN city c ON fc.Host_city_ID = c.City_ID WHERE c.Population > 1000;
+medium gold: SELECT T2.Theme FROM city AS T1 JOIN farm_competition AS T2 ON T1.City_ID  =  T2.Host_city_ID WHERE T1.Population  >  1000
+
+eval_err_num:32
+medium pred: SELECT Status, AVG(Population) AS AveragePopulation FROM city GROUP BY Status;
+medium gold: SELECT Status ,  avg(Population) FROM city GROUP BY Status
+
+eval_err_num:33
+medium pred: SELECT \"Status\", AVG(\"Population\") as AveragePopulation FROM \"city\" GROUP BY \"Status\";
+medium gold: SELECT Status ,  avg(Population) FROM city GROUP BY Status
+
+eval_err_num:34
+medium pred: SELECT c.Official_Name, COUNT(fc.Competition_ID) AS NumberOfCompetitions FROM city c JOIN farm_competition fc ON c.City_ID = fc.Host_city_ID GROUP BY c.City_ID, c.Official_Name ORDER BY NumberOfCompetitions DESC;
+medium gold: SELECT Status FROM city GROUP BY Status ORDER BY COUNT(*) ASC
+
+eval_err_num:35
+medium pred: SELECT c.Official_Name, COUNT(cr.Farm_ID) AS Frequency FROM city c JOIN farm_competition fc ON c.City_ID = fc.Host_city_ID JOIN competition_record cr ON fc.Competition_ID = cr.Competition_ID GROUP BY c.Official_Name ORDER BY Frequency ASC;
+medium gold: SELECT Status FROM city GROUP BY Status ORDER BY COUNT(*) ASC
+
+eval_err_num:36
+hard pred: SELECT \"Status\", COUNT(*) AS \"Count\" FROM \"city\" GROUP BY \"Status\" ORDER BY \"Count\" DESC LIMIT 1;
+hard gold: SELECT Status FROM city GROUP BY Status ORDER BY COUNT(*) DESC LIMIT 1
+
+eval_err_num:37
+hard pred: SELECT Status, COUNT(*) AS Frequency FROM city GROUP BY Status ORDER BY Frequency DESC LIMIT 1;
+hard gold: SELECT Status FROM city GROUP BY Status ORDER BY COUNT(*) DESC LIMIT 1
+
+eval_err_num:38
+hard pred: SELECT c.Official_Name FROM city c LEFT JOIN farm_competition f ON c.City_ID = f.Host_city_ID WHERE f.Host_city_ID IS NULL;
+hard gold: SELECT Official_Name FROM city WHERE City_ID NOT IN (SELECT Host_city_ID FROM farm_competition)
+
+eval_err_num:39
+hard pred: SELECT DISTINCT \"Status\" FROM \"city\" WHERE \"Population\" > 1500 OR \"Population\" < 500;
+hard gold: SELECT Status FROM city WHERE Population  >  1500 INTERSECT SELECT Status FROM city WHERE Population  <  500
+
+hard pred: SELECT DISTINCT Status FROM city WHERE Population > 1500 OR Population < 500;
+hard gold: SELECT Status FROM city WHERE Population  >  1500 INTERSECT SELECT Status FROM city WHERE Population  <  500
+
+eval_err_num:40
+medium pred: SELECT \"Official_Name\" FROM \"city\" WHERE \"Population\" > 1500 OR \"Population\" < 500;
+medium gold: SELECT Official_Name FROM city WHERE Population  >  1500 OR Population  <  500
+
+eval_err_num:41
+medium pred: SELECT \"Official_Name\" FROM \"city\" WHERE \"Population\" > 1500 OR \"Population\" < 500;
+medium gold: SELECT Official_Name FROM city WHERE Population  >  1500 OR Population  <  500
+
+eval_err_num:42
+extra pred: SELECT c.course_id, c.course_name, COUNT(sc.student_id) AS student_count FROM Courses c JOIN Student_Course_Registrations sc ON c.course_id = sc.course_id GROUP BY c.course_id ORDER BY student_count DESC LIMIT 1;
+extra gold: SELECT T1.course_name FROM courses AS T1 JOIN student_course_registrations AS T2 ON T1.course_id = T2.course_Id GROUP BY T1.course_id ORDER BY count(*) DESC LIMIT 1
+
+eval_err_num:43
+extra pred: SELECT c.course_name FROM Courses c JOIN (SELECT scr.course_id, COUNT(*) AS student_count FROM Student_Course_Registrations scr GROUP BY scr.course_id ORDER BY student_count DESC LIMIT 1) AS max_reg ON c.course_id = max_reg.course_id;
+extra gold: SELECT T1.course_name FROM courses AS T1 JOIN student_course_registrations AS T2 ON T1.course_id = T2.course_Id GROUP BY T1.course_id ORDER BY count(*) DESC LIMIT 1
+
+eval_err_num:44
+hard pred: SELECT s.student_id FROM Students s JOIN ( SELECT scr.student_id FROM Student_Course_Registrations scr GROUP BY scr.student_id HAVING COUNT(scr.course_id) = ( SELECT MIN(course_count) FROM ( SELECT COUNT(scr2.course_id) AS course_count FROM Student_Course_Registrations scr2 GROUP BY scr2.student_id ) AS cc ) ) AS minimum_courses ON s.student_id = minimum_courses.student_id;
+hard gold: SELECT student_id FROM student_course_registrations GROUP BY student_id ORDER BY count(*) LIMIT 1
+
+eval_err_num:45
+hard pred: SELECT s.student_id FROM Students s JOIN Student_Course_Registrations scr ON s.student_id = scr.student_id GROUP BY s.student_id HAVING COUNT(scr.course_id) = (SELECT MIN(course_count) FROM (SELECT COUNT(course_id) as course_count FROM Student_Course_Registrations GROUP BY student_id) as counts).
+hard gold: SELECT student_id FROM student_course_registrations GROUP BY student_id ORDER BY count(*) LIMIT 1
+
+eval_err_num:46
+medium pred: SELECT p.first_name, p.last_name FROM People p JOIN Candidates c ON p.person_id = c.candidate_id;
+medium gold: SELECT T2.first_name ,  T2.last_name FROM candidates AS T1 JOIN people AS T2 ON T1.candidate_id = T2.person_id
+
+eval_err_num:47
+medium pred: SELECT p.first_name, p.last_name FROM People p JOIN Candidates c ON p.person_id = c.candidate_id;
+medium gold: SELECT T2.first_name ,  T2.last_name FROM candidates AS T1 JOIN people AS T2 ON T1.candidate_id = T2.person_id
+
+eval_err_num:48
+hard pred: SELECT s.student_id FROM Students s LEFT JOIN Student_Course_Attendance sca ON s.student_id = sca.student_id WHERE sca.course_id IS NULL;
+hard gold: SELECT student_id FROM students WHERE student_id NOT IN (SELECT student_id FROM student_course_attendance)
+
+eval_err_num:49
+hard pred: SELECT s.student_id FROM Students s LEFT JOIN Student_Course_Attendance sca ON s.student_id = sca.student_id WHERE sca.student_id IS NULL;
+hard gold: SELECT student_id FROM students WHERE student_id NOT IN (SELECT student_id FROM student_course_attendance)
+
+eval_err_num:50
+medium pred: SELECT sc.student_id, c.course_name FROM Student_Course_Registrations sc JOIN Courses c ON sc.course_id = c.course_id;
+medium gold: SELECT T1.student_id ,  T2.course_name FROM student_course_registrations AS T1 JOIN courses AS T2 ON T1.course_id = T2.course_id
+
+eval_err_num:51
+hard pred: SELECT p.first_name, p.last_name, s.student_details, c.course_name, scr.registration_date FROM People p JOIN Students s ON p.person_id = s.student_id JOIN Student_Course_Registrations scr ON s.student_id = scr.student_id JOIN Courses c ON scr.course_id = c.course_id ORDER BY scr.registration_date DESC LIMIT 1;
+hard gold: SELECT T2.student_details FROM student_course_registrations AS T1 JOIN students AS T2 ON T1.student_id = T2.student_id ORDER BY T1.registration_date DESC LIMIT 1
+
+eval_err_num:52
+hard pred: SELECT p.first_name, p.middle_name, p.last_name, sc.course_id, c.course_name, sc.registration_date FROM People p JOIN Students s ON p.person_id = s.student_id JOIN Student_Course_Registrations sc ON s.student_id = sc.student_id JOIN Courses c ON sc.course_id = c.course_id WHERE sc.registration_date = (SELECT MAX(registration_date) FROM Student_Course_Registrations);
+hard gold: SELECT T2.student_details FROM student_course_registrations AS T1 JOIN students AS T2 ON T1.student_id = T2.student_id ORDER BY T1.registration_date DESC LIMIT 1
+
+eval_err_num:53
+medium pred: SELECT COUNT(student_id) AS NumberOfStudents FROM Student_Course_Registrations WHERE course_id = (SELECT course_id FROM Courses WHERE course_name = 'English');
+medium gold: SELECT count(*) FROM courses AS T1 JOIN student_course_attendance AS T2 ON T1.course_id = T2.course_id WHERE T1.course_name = "English"
+
+eval_err_num:54
+medium pred: SELECT COUNT(DISTINCT scr.student_id) AS NumberOfStudents FROM Student_Course_Registrations scr JOIN Courses c ON scr.course_id = c.course_id WHERE c.course_name = 'English';
+medium gold: SELECT count(*) FROM courses AS T1 JOIN student_course_attendance AS T2 ON T1.course_id = T2.course_id WHERE T1.course_name = "English"
+
+eval_err_num:55
+medium pred: SELECT COUNT(*) AS CourseCount FROM Student_Course_Registrations WHERE student_id = 171;
+medium gold: SELECT count(*) FROM courses AS T1 JOIN student_course_attendance AS T2 ON T1.course_id = T2.course_id WHERE T2.student_id = 171
+
+medium pred: SELECT COUNT(DISTINCT course_id) FROM Student_Course_Attendance WHERE student_id = 171;
+medium gold: SELECT count(*) FROM courses AS T1 JOIN student_course_attendance AS T2 ON T1.course_id = T2.course_id WHERE T2.student_id = 171
+
+eval_err_num:56
+medium pred: SELECT c.candidate_id FROM Candidates c JOIN People p ON c.candidate_id = p.person_id WHERE p.email_address = 'stanley.monahan@example.org';
+medium gold: SELECT T2.candidate_id FROM people AS T1 JOIN candidates AS T2 ON T1.person_id = T2.candidate_id WHERE T1.email_address = "stanley.monahan@example.org"
+
+eval_err_num:57
+medium pred: SELECT c.candidate_id FROM Candidates c JOIN People p ON c.candidate_id = p.person_id WHERE p.email_address = 'stanley.monahan@example.org';
+medium gold: SELECT T2.candidate_id FROM people AS T1 JOIN candidates AS T2 ON T1.person_id = T2.candidate_id WHERE T1.email_address = "stanley.monahan@example.org"
+
+eval_err_num:58
+medium pred: SELECT sc.student_id FROM Student_Course_Attendance sc ORDER BY sc.date_of_attendance DESC LIMIT 1;
+medium gold: SELECT candidate_id FROM candidate_assessments ORDER BY assessment_date DESC LIMIT 1
+
+eval_err_num:59
+medium pred: SELECT s.student_id FROM Student_Course_Attendance s JOIN Candidates c ON s.student_id = c.candidate_id ORDER BY s.date_of_attendance DESC LIMIT 1;
+medium gold: SELECT candidate_id FROM candidate_assessments ORDER BY assessment_date DESC LIMIT 1
+
+eval_err_num:60
+extra pred: SELECT p.person_id, p.first_name, p.middle_name, p.last_name, COUNT(sc.course_id) AS courses_registered FROM People p JOIN Students s ON p.person_id = s.student_id JOIN Student_Course_Registrations sc ON s.student_id = sc.student_id GROUP BY p.person_id, p.first_name, p.middle_name, p.last_name ORDER BY courses_registered DESC LIMIT 1;
+extra gold: SELECT T1.student_details FROM students AS T1 JOIN student_course_registrations AS T2 ON T1.student_id = T2.student_id GROUP BY T1.student_id ORDER BY count(*) DESC LIMIT 1
+
+eval_err_num:61
+extra pred: SELECT p.first_name, p.last_name FROM People p JOIN Students s ON p.person_id = s.student_id WHERE s.student_id = (SELECT student_id FROM Student_Course_Registrations GROUP BY student_id ORDER BY COUNT(course_id) DESC LIMIT 1);
+extra gold: SELECT T1.student_details FROM students AS T1 JOIN student_course_registrations AS T2 ON T1.student_id = T2.student_id GROUP BY T1.student_id ORDER BY count(*) DESC LIMIT 1
+
+eval_err_num:62
+medium pred: SELECT s.student_id, COUNT(sc.course_id) AS registered_courses FROM Students s JOIN Student_Course_Registrations sc ON s.student_id = sc.student_id GROUP BY s.student_id;
+medium gold: SELECT T1.student_id ,  count(*) FROM students AS T1 JOIN student_course_registrations AS T2 ON T1.student_id = T2.student_id GROUP BY T1.student_id
+
+eval_err_num:63
+medium pred: SELECT student_id, COUNT(course_id) AS number_of_courses FROM Student_Course_Registrations GROUP BY student_id;
+medium gold: SELECT T1.student_id ,  count(*) FROM students AS T1 JOIN student_course_registrations AS T2 ON T1.student_id = T2.student_id GROUP BY T1.student_id
+
+eval_err_num:64
+hard pred: SELECT c.course_name, COUNT(s.student_id) AS registered_students FROM Courses c JOIN Student_Course_Registrations scr ON c.course_id = scr.course_id JOIN Students s ON scr.student_id = s.student_id GROUP BY c.course_name;
+hard gold: SELECT T3.course_name ,  count(*) FROM students AS T1 JOIN student_course_registrations AS T2 ON T1.student_id = T2.student_id JOIN courses AS T3 ON T2.course_id = T3.course_id GROUP BY T2.course_id
+
+eval_err_num:65
+hard pred: SELECT c.course_name, COUNT(s.student_id) AS student_count FROM Courses c JOIN Student_Course_Registrations scr ON c.course_id = scr.course_id JOIN Students s ON scr.student_id = s.student_id GROUP BY c.course_name;
+hard gold: SELECT T3.course_name ,  count(*) FROM students AS T1 JOIN student_course_registrations AS T2 ON T1.student_id = T2.student_id JOIN courses AS T3 ON T2.course_id = T3.course_id GROUP BY T2.course_id
+
+eval_err_num:66
+hard pred: SELECT p.cell_mobile_number FROM People p JOIN Candidates c ON p.person_id = c.candidate_id JOIN Candidate_Assessments ca ON c.candidate_id = ca.candidate_id WHERE ca.assessment_outcome_code = 'Fail';
+hard gold: SELECT T3.cell_mobile_number FROM candidates AS T1 JOIN candidate_assessments AS T2 ON T1.candidate_id = T2.candidate_id JOIN people AS T3 ON T1.candidate_id = T3.person_id WHERE T2.asessment_outcome_code = "Fail"
+
+eval_err_num:67
+hard pred: SELECT p.cell_mobile_number FROM People p JOIN Candidates c ON p.person_id = c.candidate_id JOIN Candidate_Assessments ca ON c.candidate_id = ca.candidate_id WHERE ca.asessment_outcome_code = 'Fail';
+hard gold: SELECT T3.cell_mobile_number FROM candidates AS T1 JOIN candidate_assessments AS T2 ON T1.candidate_id = T2.candidate_id JOIN people AS T3 ON T1.candidate_id = T3.person_id WHERE T2.asessment_outcome_code = "Fail"
+
+easy pred: SELECT student_id FROM Student_Course_Registrations WHERE course_id = '301';
+easy gold: SELECT student_id FROM student_course_attendance WHERE course_id  =  301
+
+easy pred: SELECT student_id FROM Student_Course_Registrations WHERE course_id = '301';
+easy gold: SELECT student_id FROM student_course_attendance WHERE course_id  =  301
+
+hard pred: SELECT student_id FROM Student_Course_Registrations WHERE course_id = '301' ORDER BY registration_date DESC LIMIT 1;
+hard gold: SELECT student_id FROM student_course_attendance WHERE course_id = 301 ORDER BY date_of_attendance DESC LIMIT 1
+
+hard pred: SELECT student_id FROM Student_Course_Registrations WHERE course_id = '301' ORDER BY registration_date DESC LIMIT 1;
+hard gold: SELECT student_id FROM student_course_attendance WHERE course_id = 301 ORDER BY date_of_attendance DESC LIMIT 1
+
+eval_err_num:68
+easy pred: SELECT DISTINCT a.city FROM Addresses a JOIN People_Addresses pa ON a.address_id = pa.address_id;
+easy gold: SELECT DISTINCT T1.city FROM addresses AS T1 JOIN people_addresses AS T2 ON T1.address_id = T2.address_id
+
+eval_err_num:69
+easy pred: SELECT DISTINCT a.city FROM Addresses a JOIN People_Addresses pa ON a.address_id = pa.address_id;
+easy gold: SELECT DISTINCT T1.city FROM addresses AS T1 JOIN people_addresses AS T2 ON T1.address_id = T2.address_id
+
+eval_err_num:70
+medium pred: SELECT DISTINCT a.city FROM Addresses a JOIN People_Addresses pa ON a.address_id = pa.address_id JOIN Students s ON pa.person_id = s.student_id;
+medium gold: SELECT DISTINCT T1.city FROM addresses AS T1 JOIN people_addresses AS T2 ON T1.address_id = T2.address_id JOIN students AS T3 ON T2.person_id = T3.student_id
+
+eval_err_num:71
+medium pred: SELECT DISTINCT a.city FROM Addresses a JOIN People_Addresses pa ON a.address_id = pa.address_id JOIN Students s ON pa.person_id = s.student_id;
+medium gold: SELECT DISTINCT T1.city FROM addresses AS T1 JOIN people_addresses AS T2 ON T1.address_id = T2.address_id JOIN students AS T3 ON T2.person_id = T3.student_id
+
+eval_err_num:72
+hard pred: SELECT p.person_id, p.first_name, p.middle_name, p.last_name FROM People p JOIN Students s ON p.person_id = s.student_id WHERE s.student_id IN (SELECT scr.student_id FROM Student_Course_Registrations scr LEFT JOIN Student_Course_Attendance sca ON scr.student_id = sca.student_id AND scr.course_id = sca.course_id WHERE sca.student_id IS NULL AND sca.course_id IS NULL);
+hard gold: SELECT * FROM student_course_registrations WHERE student_id NOT IN (SELECT student_id FROM student_course_attendance)
+
+eval_err_num:73
+hard pred: SELECT p.person_id, p.first_name, p.last_name FROM People p JOIN Students s ON p.person_id = s.student_id JOIN Student_Course_Registrations scr ON s.student_id = scr.student_id LEFT JOIN Student_Course_Attendance sca ON scr.student_id = sca.student_id AND scr.course_id = sca.course_id WHERE sca.student_id IS NULL;
+hard gold: SELECT * FROM student_course_registrations WHERE student_id NOT IN (SELECT student_id FROM student_course_attendance)
+
+eval_err_num:74
+hard pred: SELECT sc.student_id FROM Student_Course_Registrations sc JOIN Courses c ON sc.course_id = c.course_id WHERE c.course_name = 'statistics' ORDER BY sc.registration_date;
+hard gold: SELECT T2.student_id FROM courses AS T1 JOIN student_course_registrations AS T2 ON T1.course_id = T2.course_id WHERE T1.course_name = "statistics" ORDER BY T2.registration_date
+
+eval_err_num:75
+hard pred: SELECT s.student_id FROM Students s JOIN Student_Course_Registrations scr ON s.student_id = scr.student_id JOIN Courses c ON scr.course_id = c.course_id WHERE c.course_name = 'Statistics' ORDER BY scr.registration_date;
+hard gold: SELECT T2.student_id FROM courses AS T1 JOIN student_course_registrations AS T2 ON T1.course_id = T2.course_id WHERE T1.course_name = "statistics" ORDER BY T2.registration_date
+
+eval_err_num:76
+hard pred: SELECT s.student_id FROM Students s JOIN Student_Course_Attendance a ON s.student_id = a.student_id JOIN Courses c ON a.course_id = c.course_id WHERE c.course_name = 'statistics' ORDER BY a.date_of_attendance;
+hard gold: SELECT T2.student_id FROM courses AS T1 JOIN student_course_attendance AS T2 ON T1.course_id = T2.course_id WHERE T1.course_name = "statistics" ORDER BY T2.date_of_attendance
+
+eval_err_num:77
+hard pred: SELECT s.student_id FROM Students s JOIN Student_Course_Attendance sca ON s.student_id = sca.student_id JOIN Courses c ON sca.course_id = c.course_id WHERE c.course_name = 'statistics' ORDER BY sca.date_of_attendance;
+hard gold: SELECT T2.student_id FROM courses AS T1 JOIN student_course_attendance AS T2 ON T1.course_id = T2.course_id WHERE T1.course_name = "statistics" ORDER BY T2.date_of_attendance
+
+eval_err_num:78
+medium pred: SELECT MAX(lat) AS HighestLatitude FROM station;
+medium gold: SELECT city ,  max(lat) FROM station GROUP BY city
+
+eval_err_num:79
+medium pred: SELECT MAX(lat) as HighestLatitude FROM station;
+medium gold: SELECT city ,  max(lat) FROM station GROUP BY city
+
+eval_err_num:80
+medium pred: SELECT s1.name AS start_station_name, s2.name AS end_station_name FROM trip t JOIN station s1 ON t.start_station_id = s1.id JOIN station s2 ON t.end_station_id = s2.id ORDER BY t.id ASC LIMIT 3;
+medium gold: SELECT start_station_name ,  end_station_name FROM trip ORDER BY id LIMIT 3
+
+eval_err_num:81
+medium pred: SELECT t.id, ss.name AS start_station_name, es.name AS end_station_name FROM trip t JOIN station ss ON t.start_station_id = ss.id JOIN station es ON t.end_station_id = es.id ORDER BY t.id ASC LIMIT 3;
+medium gold: SELECT start_station_name ,  end_station_name FROM trip ORDER BY id LIMIT 3
+
+eval_err_num:82
+medium pred: SELECT AVG(lat) AS AverageLatitude, AVG(long) AS AverageLongitude FROM station WHERE city = 'San Jose';
+medium gold: SELECT avg(lat) ,  avg(long) FROM station WHERE city  =  "San Jose"
+
+eval_err_num:83
+medium pred: SELECT AVG(lat) AS AverageLatitude, AVG(long) AS AverageLongitude FROM station WHERE city = 'San Jose';
+medium gold: SELECT avg(lat) ,  avg(long) FROM station WHERE city  =  "San Jose"
+
+eval_err_num:84
+medium pred: SELECT SUM(duration) AS TotalDuration, MAX(duration) AS MaxDuration FROM trip WHERE bike_id = 636;
+medium gold: SELECT sum(duration) ,  max(duration) FROM trip WHERE bike_id  =  636
+
+eval_err_num:85
+medium pred: SELECT SUM(duration) AS TotalDuration, MAX(duration) AS MaxDuration FROM trip WHERE bike_id = 636;
+medium gold: SELECT sum(duration) ,  max(duration) FROM trip WHERE bike_id  =  636
+
+eval_err_num:86
+hard pred: SELECT AVG(mean_temperature_f) AS AverageTemperature FROM weather WHERE date LIKE '8/%/2013';
+hard gold: SELECT zip_code  ,  avg(mean_temperature_f) FROM weather WHERE date LIKE "8/%" GROUP BY zip_code
+
+eval_err_num:87
+hard pred: SELECT AVG(mean_temperature_f) AS AverageTemperature FROM weather WHERE date LIKE '8%';
+hard gold: SELECT zip_code  ,  avg(mean_temperature_f) FROM weather WHERE date LIKE "8/%" GROUP BY zip_code
+
+eval_err_num:88
+medium pred: SELECT DISTINCT s.name FROM station s JOIN status st ON s.id = st.station_id WHERE st.bikes_available = 7;
+medium gold: SELECT DISTINCT T1.name FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id WHERE T2.bikes_available  =  7
+
+eval_err_num:89
+medium pred: SELECT DISTINCT s.name FROM station s JOIN status st ON s.id = st.station_id WHERE st.bikes_available = 7;
+medium gold: SELECT DISTINCT T1.name FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id WHERE T2.bikes_available  =  7
+
+eval_err_num:90
+extra pred: SELECT s.id, s.name, COUNT(t.start_station_id) AS trip_count FROM station s JOIN trip t ON s.id = t.start_station_id WHERE strftime('%m', t.start_date) = '08' GROUP BY s.id, s.name ORDER BY trip_count DESC LIMIT 1;
+extra gold: SELECT start_station_name ,  start_station_id FROM trip WHERE start_date LIKE "8/%" GROUP BY start_station_name ORDER BY COUNT(*) DESC LIMIT 1
+
+eval_err_num:91
+extra pred: SELECT s.id, s.name, COUNT(t.start_station_id) AS start_trips FROM station s JOIN trip t ON s.id = t.start_station_id WHERE strftime('%m', t.start_date) = '08' GROUP BY s.id, s.name ORDER BY start_trips DESC LIMIT 1;
+extra gold: SELECT start_station_name ,  start_station_id FROM trip WHERE start_date LIKE "8/%" GROUP BY start_station_name ORDER BY COUNT(*) DESC LIMIT 1
+
+extra pred: SELECT bike_id FROM trip WHERE zip_code = 94002 GROUP BY bike_id ORDER BY SUM(duration) DESC LIMIT 1;
+extra gold: SELECT bike_id FROM trip WHERE zip_code  =  94002 GROUP BY bike_id ORDER BY COUNT(*) DESC LIMIT 1
+
+eval_err_num:92
+hard pred: SELECT s.city FROM station s JOIN trip t ON s.id = t.start_station_id ORDER BY t.duration ASC LIMIT 1;
+hard gold: SELECT T1.lat ,  T1.long ,  T1.city FROM station AS T1 JOIN trip AS T2 ON T1.id  =  T2.start_station_id ORDER BY T2.duration LIMIT 1
+
+eval_err_num:93
+hard pred: SELECT s.city, MIN(t.duration) AS Duration FROM station s JOIN trip t ON s.id = t.start_station_id GROUP BY s.city;
+hard gold: SELECT T1.lat ,  T1.long ,  T1.city FROM station AS T1 JOIN trip AS T2 ON T1.id  =  T2.start_station_id ORDER BY T2.duration LIMIT 1
+
+eval_err_num:94
+hard pred: SELECT s.id FROM station s JOIN status st ON s.id = st.station_id WHERE s.city = 'San Francisco' GROUP BY s.id HAVING AVG(st.bikes_available) > 10;
+hard gold: SELECT id FROM station WHERE city  =  "San Francisco" INTERSECT SELECT station_id FROM status GROUP BY station_id HAVING avg(bikes_available)  >  10
+
+eval_err_num:95
+hard pred: SELECT DISTINCT s.id FROM station s JOIN status st ON s.id = st.station_id WHERE s.city = 'San Francisco' AND st.bikes_available > 10;
+hard gold: SELECT id FROM station WHERE city  =  "San Francisco" INTERSECT SELECT station_id FROM status GROUP BY station_id HAVING avg(bikes_available)  >  10
+
+eval_err_num:96
+extra pred: SELECT s.id, s.name FROM station s LEFT JOIN status st ON s.id = st.station_id GROUP BY s.id, s.name HAVING AVG(st.bikes_available) > 14 OR strftime('%m', s.installation_date) = '12';
+extra gold: SELECT T1.name ,  T1.id FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id GROUP BY T2.station_id HAVING avg(T2.bikes_available)  >  14 UNION SELECT name ,  id FROM station WHERE installation_date LIKE "12/%"
+
+eval_err_num:97
+extra pred: SELECT s.id, s.name FROM station s WHERE s.id IN (SELECT sta.id FROM station sta WHERE strftime('%m', sta.installation_date) = '12') OR s.id IN (SELECT st.station_id FROM status st GROUP BY st.station_id HAVING AVG(st.bikes_available) > 14);
+extra gold: SELECT T1.name ,  T1.id FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id GROUP BY T2.station_id HAVING avg(T2.bikes_available)  >  14 UNION SELECT name ,  id FROM station WHERE installation_date LIKE "12/%"
+
+eval_err_num:98
+extra pred: SELECT cloud_cover, COUNT(*) as Frequency FROM weather WHERE zip_code = 94107 GROUP BY cloud_cover ORDER BY Frequency DESC LIMIT 3;
+extra gold: SELECT cloud_cover FROM weather WHERE zip_code  =  94107 GROUP BY cloud_cover ORDER BY COUNT (*) DESC LIMIT 3
+
+eval_err_num:99
+extra pred: SELECT cloud_cover, COUNT(*) as Frequency FROM weather WHERE zip_code = 94107 GROUP BY cloud_cover ORDER BY Frequency DESC LIMIT 3;
+extra gold: SELECT cloud_cover FROM weather WHERE zip_code  =  94107 GROUP BY cloud_cover ORDER BY COUNT (*) DESC LIMIT 3
+
+eval_err_num:100
+extra pred: SELECT AVG(s.bikes_available) AS AverageBikesAvailable FROM status s JOIN station st ON s.station_id = st.id WHERE st.city != 'Palo Alto';
+extra gold: SELECT avg(bikes_available) FROM status WHERE station_id NOT IN (SELECT id FROM station WHERE city  =  "Palo Alto")
+
+eval_err_num:101
+extra pred: SELECT AVG(st.bikes_available) AS AverageBikesAvailable FROM status st JOIN station s ON st.station_id = s.id WHERE s.city <> 'Palo Alto';
+extra gold: SELECT avg(bikes_available) FROM status WHERE station_id NOT IN (SELECT id FROM station WHERE city  =  "Palo Alto")
+
+eval_err_num:102
+extra pred: SELECT AVG(s.long) as AverageLongitude FROM station s JOIN status st ON s.id = st.station_id GROUP BY s.id HAVING MAX(st.bikes_available) <= 10;
+extra gold: SELECT avg(long) FROM station WHERE id NOT IN (SELECT station_id FROM status GROUP BY station_id HAVING max(bikes_available)  >  10)
+
+eval_err_num:103
+extra pred: SELECT AVG(s.long) AS mean_longitude FROM station s WHERE s.id NOT IN (SELECT st.station_id FROM status st WHERE st.bikes_available > 10);
+extra gold: SELECT avg(long) FROM station WHERE id NOT IN (SELECT station_id FROM status GROUP BY station_id HAVING max(bikes_available)  >  10)
+
+medium pred: SELECT date, zip_code FROM weather WHERE max_temperature_f = 80;
+medium gold: SELECT date ,  zip_code FROM weather WHERE max_temperature_f  >=  80
+
+eval_err_num:104
+medium pred: SELECT w.zip_code, w.date FROM weather w WHERE w.max_temperature_f >= 80;
+medium gold: SELECT date ,  zip_code FROM weather WHERE max_temperature_f  >=  80
+
+eval_err_num:105
+medium pred: SELECT t.id FROM trip t JOIN weather w ON t.zip_code = w.zip_code WHERE w.mean_temperature_f > 60 GROUP BY t.id;
+medium gold: SELECT T1.id FROM trip AS T1 JOIN weather AS T2 ON T1.zip_code  =  T2.zip_code GROUP BY T2.zip_code HAVING avg(T2.mean_temperature_f)  >  60
+
+eval_err_num:106
+medium pred: SELECT t.id FROM trip t JOIN weather w ON DATE(t.start_date) = w.date WHERE w.mean_temperature_f > 60;
+medium gold: SELECT T1.id FROM trip AS T1 JOIN weather AS T2 ON T1.zip_code  =  T2.zip_code GROUP BY T2.zip_code HAVING avg(T2.mean_temperature_f)  >  60
+
+medium pred: SELECT COUNT(*) FROM weather WHERE max_wind_Speed_mph >= 25;
+medium gold: SELECT zip_code , count(*) FROM weather WHERE max_wind_Speed_mph  >=  25 GROUP BY zip_code
+
+medium pred: SELECT COUNT(*) FROM weather WHERE max_wind_Speed_mph = 25;
+medium gold: SELECT zip_code , count(*) FROM weather WHERE max_wind_Speed_mph  >=  25 GROUP BY zip_code
+
+eval_err_num:107
+extra pred: SELECT w.date, w.zip_code FROM weather w WHERE w.min_dew_point_f < (SELECT MIN(w2.min_dew_point_f) FROM weather w2 WHERE w2.zip_code = 94107);
+extra gold: SELECT date ,  zip_code FROM weather WHERE min_dew_point_f  <  (SELECT min(min_dew_point_f) FROM weather WHERE zip_code  =  94107)
+
+extra pred: SELECT max_temperature_f, zip_code FROM weather;
+extra gold: SELECT date ,  zip_code FROM weather WHERE min_dew_point_f  <  (SELECT min(min_dew_point_f) FROM weather WHERE zip_code  =  94107)
+
+eval_err_num:108
+medium pred: SELECT s.installation_date FROM station s JOIN trip t ON s.id = t.end_station_id;
+medium gold: SELECT T1.id ,  T2.installation_date FROM trip AS T1 JOIN station AS T2 ON T1.end_station_id  =  T2.id
+
+eval_err_num:109
+medium pred: SELECT s.installation_date FROM station s JOIN trip t ON s.id = t.end_station_id;
+medium gold: SELECT T1.id ,  T2.installation_date FROM trip AS T1 JOIN station AS T2 ON T1.end_station_id  =  T2.id
+
+eval_err_num:110
+hard pred: SELECT t.id AS TripID FROM trip t JOIN station s ON t.start_station_id = s.id WHERE s.dock_count = (SELECT MAX(dock_count) FROM station);
+hard gold: SELECT T1.id FROM trip AS T1 JOIN station AS T2 ON T1.start_station_id  =  T2.id ORDER BY T2.dock_count DESC LIMIT 1
+
+eval_err_num:111
+hard pred: SELECT t.id FROM trip t JOIN station s ON t.start_station_id = s.id WHERE s.dock_count = (SELECT MAX(dock_count) FROM station);
+hard gold: SELECT T1.id FROM trip AS T1 JOIN station AS T2 ON T1.start_station_id  =  T2.id ORDER BY T2.dock_count DESC LIMIT 1
+
+eval_err_num:112
+medium pred: SELECT COUNT(*) AS NonSFTrips FROM trip t WHERE t.end_station_id NOT IN (SELECT id FROM station WHERE city = 'San Francisco').
+medium gold: SELECT count(*) FROM trip AS T1 JOIN station AS T2 ON T1.end_station_id  =  T2.id WHERE T2.city !=  "San Francisco"
+
+eval_err_num:113
+medium pred: SELECT COUNT(*) AS TripsNotEndingInSF FROM trip WHERE end_station_id NOT IN (SELECT id FROM station WHERE city = 'San Francisco');
+medium gold: SELECT count(*) FROM trip AS T1 JOIN station AS T2 ON T1.end_station_id  =  T2.id WHERE T2.city != "San Francisco"
+
+medium pred: SELECT date FROM weather WHERE events NOT LIKE '%Fog%' AND events NOT LIKE '%Rain%';
+medium gold: SELECT date FROM weather WHERE zip_code  =  94107 AND EVENTS != "Fog" AND EVENTS != "Rain"
+
+medium pred: SELECT date FROM weather WHERE zip_code = 94107 AND events NOT LIKE '%fog%' AND events NOT LIKE '%rain%';
+medium gold: SELECT date FROM weather WHERE zip_code  =  94107 AND EVENTS != "Fog" AND EVENTS != "Rain"
+
+eval_err_num:114
+hard pred: SELECT s.id FROM station s LEFT JOIN status st ON s.id = st.station_id WHERE s.lat > 37.4 GROUP BY s.id HAVING MIN(st.bikes_available) >= 7;
+hard gold: SELECT id FROM station WHERE lat  >  37.4 EXCEPT SELECT station_id FROM status GROUP BY station_id HAVING min(bikes_available)  <  7
+
+eval_err_num:115
+hard pred: SELECT s.id FROM station s WHERE s.lat > 37.4 AND NOT EXISTS (SELECT 1 FROM status st WHERE st.station_id = s.id AND st.bikes_available < 7);
+hard gold: SELECT id FROM station WHERE lat  >  37.4 EXCEPT SELECT station_id FROM status GROUP BY station_id HAVING min(bikes_available)  <  7
+
+eval_err_num:116
+extra pred: SELECT s.name FROM station s JOIN status st ON s.id = st.station_id WHERE s.city <> 'San Jose' GROUP BY s.name HAVING AVG(st.bikes_available) > 10;
+extra gold: SELECT T1.name FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id GROUP BY T2.station_id HAVING avg(bikes_available)  >  10 EXCEPT SELECT name FROM station WHERE city  =  "San Jose"
+
+eval_err_num:117
+extra pred: SELECT s.name FROM station s JOIN status st ON s.id = st.station_id WHERE st.bikes_available > 10 AND s.city != 'San Jose';
+extra gold: SELECT T1.name FROM station AS T1 JOIN status AS T2 ON T1.id  =  T2.station_id GROUP BY T2.station_id HAVING avg(bikes_available)  >  10 EXCEPT SELECT name FROM station WHERE city  =  "San Jose"
+
+medium pred: SELECT name, city FROM station ORDER BY lat ASC LIMIT 1;
+medium gold: SELECT name ,  lat ,  city FROM station ORDER BY lat LIMIT 1
+
+medium pred: SELECT name, city FROM station ORDER BY lat ASC LIMIT 1;
+medium gold: SELECT name ,  lat ,  city FROM station ORDER BY lat LIMIT 1
+
+eval_err_num:118
+medium pred: SELECT AVG(mean_temperature_f) AS AverageTemperature, AVG(mean_humidity) AS AverageHumidity FROM weather WHERE max_gust_speed_mph IN (SELECT max_gust_speed_mph FROM weather ORDER BY max_gust_speed_mph DESC LIMIT 3);
+medium gold: SELECT date ,  mean_temperature_f ,  mean_humidity FROM weather ORDER BY max_gust_speed_mph DESC LIMIT 3
+
+eval_err_num:119
+medium pred: SELECT city, COUNT(id) AS NumberOfStations FROM station GROUP BY city HAVING COUNT(id) >= 15;
+medium gold: SELECT city ,  COUNT(*) FROM station GROUP BY city HAVING COUNT(*)  >=  15
+
+eval_err_num:120
+medium pred: SELECT city, COUNT(id) AS NumberOfStations FROM station GROUP BY city HAVING COUNT(id) >= 15;
+medium gold: SELECT city ,  COUNT(*) FROM station GROUP BY city HAVING COUNT(*)  >=  15
+
+eval_err_num:121
+medium pred: SELECT s.id, s.name FROM station s JOIN trip t ON s.id = t.start_station_id GROUP BY s.id, s.name HAVING COUNT(t.start_station_id) >= 200;
+medium gold: SELECT start_station_id ,  start_station_name FROM trip GROUP BY start_station_name HAVING COUNT(*)  >=  200
+
+eval_err_num:122
+medium pred: SELECT s.id, s.name FROM station s JOIN trip t ON s.id = t.start_station_id GROUP BY s.id HAVING COUNT(t.id) >= 200;
+medium gold: SELECT start_station_id ,  start_station_name FROM trip GROUP BY start_station_name HAVING COUNT(*)  >=  200
+
+easy pred: SELECT date FROM weather GROUP BY date HAVING AVG(mean_visibility_miles) < 10;
+easy gold: SELECT zip_code FROM weather GROUP BY zip_code HAVING avg(mean_visibility_miles)  <  10
+
+eval_err_num:123
+medium pred: SELECT city, MAX(lat) AS max_latitude FROM station GROUP BY city ORDER BY max_latitude DESC;
+medium gold: SELECT city FROM station GROUP BY city ORDER BY max(lat) DESC
+
+medium pred: SELECT name FROM station ORDER BY lat DESC;
+medium gold: SELECT city FROM station GROUP BY city ORDER BY max(lat) DESC
+
+eval_err_num:124
+medium pred: SELECT s.long, AVG(t.duration) AS AverageDuration FROM station s JOIN trip t ON s.id = t.start_station_id GROUP BY s.long;
+medium gold: SELECT T1.name ,  T1.long ,  avg(T2.duration) FROM station AS T1 JOIN trip AS T2 ON T1.id  =  T2.start_station_id GROUP BY T2.start_station_id
+
+eval_err_num:125
+medium pred: SELECT s.long, AVG(t.duration) AS average_duration FROM station s JOIN trip t ON s.id = t.start_station_id GROUP BY s.long;
+medium gold: SELECT T1.name ,  T1.long ,  avg(T2.duration) FROM station AS T1 JOIN trip AS T2 ON T1.id  =  T2.start_station_id GROUP BY T2.start_station_id
+
+eval_err_num:126
+medium pred: SELECT s.lat, MIN(t.duration) as MinDuration FROM station s JOIN trip t ON s.id = t.end_station_id GROUP BY s.lat;
+medium gold: SELECT T1.name ,  T1.lat ,  min(T2.duration) FROM station AS T1 JOIN trip AS T2 ON T1.id  =  T2.end_station_id GROUP BY T2.end_station_id
+
+eval_err_num:127
+medium pred: SELECT s.name, MIN(t.duration) AS minimum_duration FROM station s JOIN trip t ON s.id = t.end_station_id GROUP BY s.name;
+medium gold: SELECT T1.name ,  T1.lat ,  min(T2.duration) FROM station AS T1 JOIN trip AS T2 ON T1.id  =  T2.end_station_id GROUP BY T2.end_station_id
+
+eval_err_num:128
+easy pred: SELECT DISTINCT s.name FROM station s JOIN trip t ON s.id = t.start_station_id WHERE t.duration < 100;
+easy gold: SELECT DISTINCT start_station_name FROM trip WHERE duration  <  100
+
+eval_err_num:129
+easy pred: SELECT DISTINCT s.name FROM station s JOIN trip t ON s.id = t.start_station_id WHERE t.duration < 100;
+easy gold: SELECT DISTINCT start_station_name FROM trip WHERE duration  <  100
+
+hard pred: SELECT zip_code FROM weather GROUP BY zip_code HAVING MAX(max_dew_point_f) < 70;
+hard gold: SELECT DISTINCT zip_code FROM weather EXCEPT SELECT DISTINCT zip_code FROM weather WHERE max_dew_point_f  >=  70
+
+hard pred: SELECT DISTINCT zip_code FROM weather GROUP BY zip_code HAVING MAX(max_dew_point_f) < 70;
+hard gold: SELECT DISTINCT zip_code FROM weather EXCEPT SELECT DISTINCT zip_code FROM weather WHERE max_dew_point_f  >=  70
+
+eval_err_num:130
+hard pred: SELECT t.id FROM trip t WHERE t.duration = (SELECT AVG(duration) FROM trip WHERE zip_code = 94103);
+hard gold: SELECT id FROM trip WHERE duration  >=  (SELECT avg(duration) FROM trip WHERE zip_code  =  94103)
+
+                     easy                 medium               hard                 extra                all                 
+count                48                   82                   46                   24                   200                 
+=====================   EXECUTION ACCURACY     =====================
+execution            0.562                0.110                0.217                0.042                0.235               
+
+====================== EXACT MATCHING ACCURACY =====================
+exact match          0.562                0.122                0.174                0.042                0.230               
+
+---------------------PARTIAL MATCHING ACCURACY----------------------
+select               0.853                0.650                1.000                0.667                0.814               
+select(no AGG)       0.853                0.650                1.000                0.667                0.814               
+where                1.000                0.556                0.857                1.000                0.853               
+where(no OP)         1.000                0.889                0.857                1.000                0.941               
+group(no Having)     0.333                0.000                0.500                1.000                0.556               
+group                0.333                0.000                0.500                1.000                0.556               
+order                1.000                0.900                0.500                0.500                0.818               
+and/or               1.000                0.976                1.000                1.000                0.990               
+IUEN                 0.000                0.000                1.000                0.000                1.000               
+keywords             0.960                0.737                0.769                1.000                0.847               
+---------------------- PARTIAL MATCHING RECALL ----------------------
+select               0.604                0.159                0.283                0.083                0.285               
+select(no AGG)       0.604                0.159                0.283                0.083                0.285               
+where                0.727                0.172                0.222                0.143                0.315               
+where(no OP)         0.727                0.276                0.222                0.143                0.348               
+group(no Having)     0.333                0.000                0.182                0.125                0.091               
+group                0.333                0.000                0.182                0.125                0.091               
+order                0.600                0.429                0.105                0.083                0.290               
+and/or               1.000                1.000                0.978                1.000                0.995               
+IUEN                 0.000                0.000                0.333                0.000                0.235               
+keywords             0.686                0.203                0.217                0.083                0.287               
+---------------------- PARTIAL MATCHING F1 --------------------------
+select               0.707                0.255                0.441                0.148                0.422               
+select(no AGG)       0.707                0.255                0.441                0.148                0.422               
+where                0.842                0.263                0.353                0.250                0.460               
+where(no OP)         0.842                0.421                0.353                0.250                0.508               
+group(no Having)     0.333                1.000                0.267                0.222                0.156               
+group                0.333                1.000                0.267                0.222                0.156               
+order                0.750                0.581                0.174                0.143                0.429               
+and/or               1.000                0.988                0.989                1.000                0.992               
+IUEN                 1.000                1.000                0.500                1.000                0.381               
+keywords             0.800                0.318                0.339                0.154                0.429               
